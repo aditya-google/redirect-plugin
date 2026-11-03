@@ -1,0 +1,49 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor/IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+
+# Dependencies (if added later)
+node_modules/
+vendor/
+composer.lock
+package-lock.json
+
+# Logs and debug
+*.log
+debug.log
+error_log
+
+# Environment / secrets
+.env
+.env.*
+wp-config.php
+
+# Build artifacts
+*.zip
+*.tar.gz
+*.tgz
+dist/
+build/
+
+# PHP / testing caches
+.phpunit.result.cache
+.phpunit.cache/
+coverage/
+coverage-html/
+
+# WordPress generated files
+wp-content/uploads/
+*.mo
+
+# Temporary files
+*.bak
+*.tmp
+*.swp
