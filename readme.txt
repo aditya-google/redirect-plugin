@@ -1,5 +1,5 @@
 === Redirect Me ===
-Contributors: adityad
+Contributors: lowq
 Tags: starter, boilerplate
 Requires at least: 6.0
 Tested up to: 7.1
