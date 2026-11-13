@@ -155,10 +155,13 @@ class WP_Starter_Plugin {
             }
             $code = isset( $codes[ $i ] ) ? absint( $codes[ $i ] ) : 301;
 
-            if ( '' === $from || '' === $to ) {
+            if ( '' === $from ) {
                 continue;
             }
-            if ( ! in_array( $code, array( 301, 302, 307, 308 ), true ) ) {
+            if ( 410 !== $code && '' === $to ) {
+                continue;
+            }
+            if ( ! in_array( $code, array( 301, 302, 307, 308, 410 ), true ) ) {
                 $code = 301;
             }
 
@@ -218,7 +221,7 @@ class WP_Starter_Plugin {
                                 <td><input type="text" name="redirect_to[]" value="<?php echo esc_attr( $r['to'] ); ?>" class="regular-text" placeholder="https://example.com/new-page" /></td>
                                 <td>
                                     <select name="redirect_code[]">
-                                        <?php foreach ( array( 301, 302, 307, 308 ) as $code ) : ?>
+                                        <?php foreach ( array( 301, 302, 307, 308, 410 ) as $code ) : ?>
                                             <option value="<?php echo esc_attr( $code ); ?>" <?php selected( $r['code'], $code ); ?>><?php echo esc_html( $code ); ?></option>
                                         <?php endforeach; ?>
                                     </select>
@@ -232,7 +235,7 @@ class WP_Starter_Plugin {
                             <td><input type="text" name="redirect_to[]" value="" class="regular-text" placeholder="https://example.com/new-page" /></td>
                             <td>
                                 <select name="redirect_code[]">
-                                    <?php foreach ( array( 301, 302, 307, 308 ) as $code ) : ?>
+                                    <?php foreach ( array( 301, 302, 307, 308, 410 ) as $code ) : ?>
                                         <option value="<?php echo esc_attr( $code ); ?>" <?php selected( 301, $code ); ?>><?php echo esc_html( $code ); ?></option>
                                     <?php endforeach; ?>
                                 </select>
@@ -340,9 +343,23 @@ class WP_Starter_Plugin {
             }
             if ( $this->normalize_path( $r['from'] ) === $request_path ) {
                 $code = isset( $r['code'] ) ? (int) $r['code'] : 301;
-                if ( ! in_array( $code, array( 301, 302, 307, 308 ), true ) ) {
+                if ( ! in_array( $code, array( 301, 302, 307, 308, 410 ), true ) ) {
                     $code = 301;
                 }
+
+                if ( 410 === $code ) {
+                    status_header( 410 );
+                    nocache_headers();
+                    $template = get_query_template( '410' );
+                    if ( ! $template ) {
+                        $template = get_404_template();
+                    }
+                    if ( $template ) {
+                        include $template;
+                    }
+                    exit;
+                }
+
                 if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
                     error_log( 'WP Starter Plugin: redirecting ' . $request_path . ' -> ' . $r['to'] . ' (' . $code . ')' );
                 }
